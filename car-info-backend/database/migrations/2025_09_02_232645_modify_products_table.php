@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('product_type');
             $table->unsignedBigInteger('product_parent_id')->nullable();
 
-            // $table->foreign('product_parent_id')
-            //       ->references('product_id')
-            //       ->on('products')
-            //       ->nullOnDelete(); 
+            $table->foreign('product_parent_id')
+                  ->references('product_id')
+                  ->on('products')
+                  ->nullOnDelete(); 
 
             $table->timestamps();
         });

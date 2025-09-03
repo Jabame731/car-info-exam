@@ -14,12 +14,12 @@ class ProductController extends Controller
     {
         $query = Product::query();
 
-        if($request->has('q')) {
+        if($request->has('type')) {
             $query->where('product_type', $request->type);
         }
 
-        if($request->has('name')) {
-            $query->where('product_name', 'like', '%', $request->name);
+        if ($request->has('name')) {
+            $query->where('product_name', 'like', '%' . $request->name . '%');
         }
 
         return response()->json($query->get());
@@ -30,16 +30,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validation = $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_type' => 'required|string|max:255',
-            'product_parent_id' => 'nullable|exists:products,product_id'
-        ]);
+    $validated = $request->validate([
+        'product_name' => 'required|string|max:255',
+        'product_type' => 'required|string|max:255',
+    ]);
 
-        $product = Product::create($validate);
+    $product = Product::create($validated);
 
-        return response()->json($product, 201);
-
+    return response()->json($product, 201);
     }
 
     /**
@@ -61,7 +59,6 @@ class ProductController extends Controller
         $validation = $request->validate([
             'product_name' => 'sometimes|string|max:255',
             'product_type' => 'sometimes|string|max:255',
-            'product_parent_id' => 'nullable|exists:products,product_id',
         ]);
 
         $product->update($validation);
